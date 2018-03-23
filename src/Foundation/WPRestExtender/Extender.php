@@ -13,6 +13,7 @@ class Extender extends \WP_REST_Controller
 	public function __construct(WPRoute $route)
 	{
 		$this->route = $route;
+		$this->register_routes();
 	}
 
 	/**
@@ -20,7 +21,7 @@ class Extender extends \WP_REST_Controller
 	 * 
 	 * @return bool
 	 */
-	public function register()
+	public function register_routes()
 	{
 		$this->route->compile();
 
