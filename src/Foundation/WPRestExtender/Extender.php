@@ -28,7 +28,7 @@ class Extender extends \WP_REST_Controller
 		$compiledRoutes = $this->route->getCompiledRoutes();
 
 	  	foreach($compiledRoutes as $route){
-	      register_rest_route( $route['namespace'], '/' . $route['resource'], $route['options']);
+	      register_rest_route( $route['prefix'], '/' . $route['resource'], $route['options']);
 	  	}
 
 	  	return true;

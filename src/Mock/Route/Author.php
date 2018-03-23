@@ -1,6 +1,6 @@
 <?php
 
-namespace Mock\Routes;
+namespace Mock\Route;
 
 class Author
 {

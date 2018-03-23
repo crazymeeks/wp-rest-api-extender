@@ -3,8 +3,7 @@
 namespace Crazymeeks\WP\Foundation\Route;
 
 use Closure;
-use Crazymeeks\WP\Foundation\Route\Route;
-use Crazymeeks\WP\Foundation\Route\RouteCollection;
+use SplStack;
 
 class WPRoute
 {
@@ -12,23 +11,30 @@ class WPRoute
 	/**
 	 * Route prefixes
 	 * 
-	 * @var array
+	 * @var string
 	 */
-	protected $prefix = [];
+	protected $prefix;
 
 	/**
 	 * Route namespace
 	 * 
-	 * @var array
+	 * @var string
 	 */
-	protected $namespace = [];
+	protected $namespace;
 
 	/**
 	 * Route resource
 	 * 
+	 * @var string
+	 */
+	protected $resource;
+
+	/**
+	 * Route options
+	 * 
 	 * @var array
 	 */
-	protected $resource = [];
+	protected $options = [];
 
 	/**
 	 * The build routes
@@ -38,25 +44,24 @@ class WPRoute
 	protected $compiledRoutes = [];
 
 	/**
-	 * The registered routes
+	 * The route prefix stack
 	 * 
-	 * @var array
+	 * @var \SplStack
 	 */
-	protected $routes = [];
+	protected $prefixStack;
 
 	/**
-	 * The grouped routes
+	 * The route namespace stack
 	 * 
-	 * @var array
+	 * @var \SplStack
 	 */
-	protected $groups = [];
-
-
-	protected $routeCollection;
+	protected $namespaceStack;
 
 	public function __construct()
 	{
-		$this->routeCollection = new RouteCollection();
+		$this->prefixStack = new SplStack();
+
+		$this->namespaceStack = new SplStack();
 	}
 
 	/**
@@ -68,11 +73,123 @@ class WPRoute
 	 * @return void
 	 */
 	public function group(array $groups, Closure $callback)
-	{	
-		$this->groups = $groups;
+	{
 
-		return $callback($this);
+		$this->setStacks($groups);
 
+		$callback($this);
+
+		$this->popStacks($groups);
+
+	}
+
+	/**
+	 * We will set the stack for specific route configurations
+	 * like namespace and prefix
+	 *
+	 * @param  array $settings
+	 */
+	protected function setStacks(array $settings)
+	{
+		if (array_key_exists('prefix', $settings)) {
+			 $this->setStackPrefix($settings['prefix']);
+		}
+
+		if (array_key_exists('namespace', $settings)) {
+
+			$this->setStackNamespace($settings['namespace']);
+		}
+	}
+
+	protected function popStacks($settings)
+	{
+		if (array_key_exists('prefix', $settings)) {
+			if ( !is_null($this->getStackPrefix()) ) {
+				$this->prefixStack->pop();
+			}
+		}
+
+		if (array_key_exists('namespace', $settings)) {
+			if ( !is_null($this->getStackNamespace()) ) {
+				$this->namespaceStack->pop();
+			}
+		}
+	}
+
+	/**
+	 * Get the prefix in stack(if any)
+	 * 
+	 * @return mixed
+	 */
+	protected function getStackPrefix()
+	{
+		if ($this->prefixStack->isEmpty()) {
+			return null;
+		}
+
+		$topPrefix = $this->prefixStack->top();
+
+		return rtrim($topPrefix, '/');
+	}
+
+	/**
+	 * Set route group prefix in the stack
+	 * 
+	 * @param string $prefix
+	 *
+	 * @return  string
+	 */
+	protected function setStackPrefix($prefix)
+	{
+		if ( $this->prefixStack->isEmpty() ) {
+			$this->prefixStack->push($prefix);
+
+			return $prefix;
+		}
+
+		$topPrefix = $this->getStackPrefix();
+		$prefix = $topPrefix . '/' . ltrim($prefix);
+
+		$this->prefixStack->push($prefix);
+
+		return $prefix;
+
+	}
+
+
+	/**
+	 * Set route group prefix in the stack
+	 * 
+	 * @param string $prefix
+	 *
+	 * @return  string
+	 */
+	protected function setStackNamespace($namespace)
+	{
+		if ( $this->namespaceStack->isEmpty() ) {
+			$this->namespaceStack->push($namespace);
+
+			return $namespace;
+		}
+
+		$topNamespace = $this->getStackNamespace();
+		$namespace = $topNamespace . '\\' . ltrim($namespace);
+
+		$this->namespaceStack->push($namespace);
+
+		return $namespace;
+
+	}
+
+	protected function getStackNamespace()
+	{
+		if ( $this->namespaceStack->isEmpty()) {
+			return null;
+		}
+
+		$topNamespace = $this->namespaceStack->top();
+
+		return rtrim($topNamespace, '\\');
 	}
 
 	/**
@@ -81,69 +198,85 @@ class WPRoute
 	 * @param  string $resource
 	 * @param  string $classAndAction        The fully qualified namespace of the class and method
 	 * 
-	 * @return $this
+	 * @return void
 	 */
 	public function get($resource, $classAndAction)
 	{
-
 		$this->addRoute('GET', $resource, $classAndAction);
+	}
+
+	/**
+	 * Add route
+	 * 
+	 * @param string $method         The HTTP Method
+	 * @param string $resource       Api route resource
+	 * @param string $classAndAction This is like Controller@action in Laravel
+	 */
+	protected function addRoute($method, $resource, $classAndAction)
+	{
+		$this->setPrefix($this->getStackPrefix())
+			 ->setNamespace($this->getStackNamespace())
+			 ->setResource($resource)
+			 ->setOptions([$method, $classAndAction])
+			 ->compile();
+	}
+
+	/**
+	 * Set route prefix
+	 * 
+	 * @param string $namespace    The prefix popped from prefixStack
+	 *
+	 * @return  $this
+	 */
+	protected function setPrefix($prefix)
+	{
+		$this->prefix = $prefix;
 
 		return $this;
 	}
 
-	protected function addRoute($method, $resource, $classAndAction)
+	/**
+	 * Set route namespace
+	 *
+	 * @param  string $namespace    The namespace popped from namespaceStack
+	 */
+	protected function setNamespace($namespace)
 	{
-		return $this->routeCollection->add($this->createRoute($method, $resource, $classAndAction));
+		$this->namespace = $namespace;
+
+		return $this;
 	}
 
 	/**
-	 * Create route
-	 * 
-	 * @param  string $method         The HTTP methods(GET, PUT, POST, DELETE, PATCH)
-	 * @param  string $resource
-	 * @param  string $classAndAction The class and action method(Class@method)
-	 * 
-	 * @return Crazymeeks\WP\Foundation\Route\Route
+	 * Set route resource
+	 *
+	 * @param  string $resource    The route resource. This comes from calling get() method
+	 *
+	 * @return  $this
 	 */
-	protected function createRoute($method, $resource, $classAndAction)
+	protected function setResource($resource)
 	{
-		$this->mergeWithGroups($method, $resource, $classAndAction);
+		$this->resource = $resource;
 
-		return new Route($this->routes);
+		return $this;
 	}
 
 	/**
-	 * Merge routes to group route
+	 * Set route options
 	 * 
-	 * @param  string $method         The HTTP method
-	 * @param  string $resource       The route resource
-	 * @param  string $classAndAction The class and action method(Class@method)
-	 * 
-	 * @return void
+	 * @param array $options
+	 *
+	 * @return  $this
 	 */
-	protected function mergeWithGroups($method, $resource, $classAndAction)
+	protected function setOptions(array $options)
 	{
 
-		foreach($this->groups as $key => $group){
-			if ($key === 'namespace') {
-					$group = $group . '\\' . $classAndAction;
-				}
-				
-				$this->routes[$this->groups['namespace']][$resource][$method][] = [$key => $group];
+		$callback = explode('@', $options[1]);
+		$class = $this->namespace . '\\' . $callback[0];
+		
+		$this->options = ['methods' => strtoupper($options[0]), 'callback' => [(new $class), $callback[1]]];
 
-				$group = null;
-			
-		}
-	}
-
-	/**
-	 * Compile and format the registered rest route
-	 * 
-	 * @return Crazymeeks\WP\Foundation\Route\RouteCollection
-	 */
-	public function routeCollection()
-	{
-		return $this->routeCollection;
+		return $this;
 	}
 
 	/**
@@ -153,29 +286,11 @@ class WPRoute
 	 */
 	public function compile()
 	{
-
-		static $formattedRoutes = [];
-
-		$routeCollections = $this->routeCollection()->all();
-
-		foreach($routeCollections as $routes){
-			foreach($routes as $resource => $route){
-				foreach($route as $method => $items){
-					$callback = explode('@', $items[1]['namespace']);
-
-					$formattedRoutes[] = array(
-						'namespace' => $items[0]['prefix'],
-						'resource'  => $resource,
-						'options'   => array(
-							'methods' => strtoupper($method),
-							'callback' => array((new $callback[0]), $callback[1]),
-						),
-					);
-				}
-			}
-		}
-
-		$this->compiledRoutes = $formattedRoutes;
+		$this->compiledRoutes[] = [
+			'prefix' => $this->prefix,
+			'resource' => $this->resource,
+			'options'  => $this->options,
+		];
 	}
 
 	public function __call($name, $args)
@@ -194,32 +309,3 @@ class WPRoute
         throw new ObjectProperyNotFoundException("The property {$property} has not been set.");
 	}
 }
-
-
-/*
-
-
-// $route = array(
-		// 	array(
-		// 		'namespace' => 'myplugin/v1',
-		// 		'resource'  => '/author',
-		// 		'options'   => ,
-		// 	),
-		// );
-
-foreach($routes as $route){
-	register_rest_route($route['namespace'], $route['resource'], $route['options']);
-}
-
-register_rest_route( 'myplugin/v1', '/author/(?P<id>\d+)', array(
-		'methods' => 'GET',
-		'callback' => 'my_awesome_func',
-		'args' => array(
-			'id' => array(
-				'validate_callback' => function($param, $request, $key) {
-					return is_numeric( $param );
-				}
-			),
-		),
-	) );
- */
