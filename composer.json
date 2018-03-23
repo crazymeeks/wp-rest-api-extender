@@ -1,0 +1,22 @@
+{
+    "name": "crazymeeks/wp-rest-api-extender",
+    "description": "An extender plugin for WP Rest API",
+    "type": "wp-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jeff Claud",
+            "email": "jefferson.claud@nuworks.ph"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Crazymeeks\\WP\\": "src/",
+            "Mock\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    }
+}
