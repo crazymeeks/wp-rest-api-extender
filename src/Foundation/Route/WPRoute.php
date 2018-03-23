@@ -5,6 +5,8 @@ namespace Crazymeeks\WP\Foundation\Route;
 use Closure;
 use SplStack;
 
+use Crazymeeks\WP\Foundation\Exceptions\ObjectProperyNotFoundException;
+
 class WPRoute
 {
 
