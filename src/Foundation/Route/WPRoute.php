@@ -206,6 +206,58 @@ class WPRoute
 	}
 
 	/**
+	 * Route post
+	 * 
+	 * @param  string $resource
+	 * @param  string $classAndAction        The fully qualified namespace of the class and method
+	 * 
+	 * @return void
+	 */
+	public function post($resource, $classAndAction)
+	{
+		$this->addRoute('POST', $resource, $classAndAction);
+	}
+
+	/**
+	 * Route PUT
+	 * 
+	 * @param  string $resource
+	 * @param  string $classAndAction        The fully qualified namespace of the class and method
+	 * 
+	 * @return void
+	 */
+	public function put($resource, $classAndAction)
+	{
+		$this->addRoute('PUT', $resource, $classAndAction);
+	}
+
+	/**
+	 * Route DELETE
+	 * 
+	 * @param  string $resource
+	 * @param  string $classAndAction        The fully qualified namespace of the class and method
+	 * 
+	 * @return void
+	 */
+	public function delete($resource, $classAndAction)
+	{
+		$this->addRoute('DELETE', $resource, $classAndAction);
+	}
+
+	/**
+	 * Route PATCH
+	 * 
+	 * @param  string $resource
+	 * @param  string $classAndAction        The fully qualified namespace of the class and method
+	 * 
+	 * @return void
+	 */
+	public function patch($resource, $classAndAction)
+	{
+		$this->addRoute('PATCH', $resource, $classAndAction);
+	}
+
+	/**
 	 * Add route
 	 * 
 	 * @param string $method         The HTTP Method

@@ -14,6 +14,7 @@
 
 # A WordPress Plugin that extends WP Rest API
 
+### [Documentation](https://github.com/crazymeeks/wp-rest-api-extender/wiki)
 ## Report Bug
 Email: jeffclaud17@gmail.com
 
