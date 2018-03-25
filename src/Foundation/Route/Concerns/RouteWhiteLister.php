@@ -14,7 +14,13 @@ trait RouteWhiteLister
 	 */
 	public function whiteList(array $routes)
 	{
-		$this->whitelistedroutes =  array_merge($routes, $this->whitelistedroutes);
+		$format = [];
+		
+		foreach($routes as $route){
+			$format[] = '/' . ltrim($route, '/');
+		}
+
+		$this->whitelistedroutes =  array_merge($format, $this->whitelistedroutes);
 	}
 
 	/**
