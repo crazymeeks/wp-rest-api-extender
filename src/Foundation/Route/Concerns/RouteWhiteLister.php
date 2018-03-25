@@ -27,11 +27,11 @@ trait RouteWhiteLister
 	public function createRouteWhiteList()
 	{
 
-		$mainPrefix = rtrim($this->prefix , '/');
+		$mainPrefix = '/' . ltrim(rtrim($this->prefix , '/'), '/');
 
 		$this->whitelistedroutes =  array_unique(array_merge([$mainPrefix], $this->whitelistedroutes));
 
-		$endpoint = rtrim($this->prefix , '/') . '/' . ltrim($this->resource, '/');
+		$endpoint = $mainPrefix . '/' . ltrim($this->resource, '/');
 
 		$routes =  array_unique(array_merge([$endpoint], $this->whitelistedroutes));
 		// sort in ascending order

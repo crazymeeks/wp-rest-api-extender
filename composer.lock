@@ -678,12 +678,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "2cf3d15891e3843c9f0e01268e2eadd0e8beec2f"
+                "reference": "f3aa1ff3542191d93ea2bc6174dc715869050e22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2cf3d15891e3843c9f0e01268e2eadd0e8beec2f",
-                "reference": "2cf3d15891e3843c9f0e01268e2eadd0e8beec2f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f3aa1ff3542191d93ea2bc6174dc715869050e22",
+                "reference": "f3aa1ff3542191d93ea2bc6174dc715869050e22",
                 "shasum": ""
             },
             "require": {
@@ -697,7 +697,7 @@
                 "phar-io/version": "^1.0",
                 "php": "^7.1",
                 "phpspec/prophecy": "^1.7",
-                "phpunit/php-code-coverage": "^6.0",
+                "phpunit/php-code-coverage": "^6.0.1",
                 "phpunit/php-file-iterator": "^1.4.3",
                 "phpunit/php-text-template": "^1.2.1",
                 "phpunit/php-timer": "^2.0",
@@ -750,7 +750,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-03-15T16:51:24+00:00"
+            "time": "2018-03-23T16:02:53+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
