@@ -76,6 +76,36 @@ class WpRestExtenderTest extends WP_UnitTestCase {
 
 	}
 
+	/**
+	 * @test
+	 */
+	public function it_can_whitelist_routes()
+	{
+		$route = $this->getRoute();
+
+		$route->group(['prefix' => 'myplugin/v1', 'namespace' => 'Mock\Route'], function($route){
+			$route->get('/author', 'Author@getRoute');
+			$route->get('/anotherauthor', 'Author@getRoute');
+		});
+
+
+		$route->whiteList(['v2/users', 'v2/test']);
+
+		$wpRestApiExtender = new Extender($route);
+
+		$whitelistedRoutes = $route->getWhiteListedRoutes();
+
+		$routes = [
+			'myplugin/v1',
+			'myplugin/v1/anotherauthor',
+			'myplugin/v1/author',
+			'v2/test',
+			'v2/users',
+		];
+
+		$this->assertSame(count($whitelistedRoutes), count($routes));
+	}
+
 	private function getRoute()
 	{
 		return new WPRoute();

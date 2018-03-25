@@ -4,11 +4,13 @@ namespace Crazymeeks\WP\Foundation\Route;
 
 use Closure;
 use SplStack;
-
+use Crazymeeks\WP\Foundation\Route\Concerns\RouteWhiteLister;
 use Crazymeeks\WP\Foundation\Exceptions\ObjectProperyNotFoundException;
 
 class WPRoute
 {
+
+	use RouteWhiteLister;
 
 	/**
 	 * Route prefixes
@@ -59,6 +61,17 @@ class WPRoute
 	 */
 	protected $namespaceStack;
 
+	/**
+	 * Holds the list of whitelisted routes
+	 * 
+	 * @var array
+	 */
+	protected $whitelistedroutes = [];
+
+	/**
+	 * Constructor
+	 * 
+	 */
 	public function __construct()
 	{
 		$this->prefixStack = new SplStack();
@@ -272,7 +285,10 @@ class WPRoute
 			 ->setNamespace($this->getStackNamespace())
 			 ->setResource($resource)
 			 ->setOptions([$method, $classAndAction])
-			 ->compile();
+			 ->compile()
+			 ->then(function(){
+			 	$this->createRouteWhiteList();
+			 });
 	}
 
 	/**
@@ -336,7 +352,7 @@ class WPRoute
 	/**
 	 * Compile the routes
 	 * 
-	 * @return array
+	 * @return $this
 	 */
 	public function compile()
 	{
@@ -345,6 +361,20 @@ class WPRoute
 			'resource' => $this->resource,
 			'options'  => $this->options,
 		];
+
+		return $this;
+	}
+
+	/**
+	 * 
+	 *
+	 * @param  \Closure $callback
+	 * 
+	 * @return \Closure $callback
+	 */
+	public function then(Closure $callback)
+	{
+		return call_user_func($callback, $this);
 	}
 
 	public function __call($name, $args)
