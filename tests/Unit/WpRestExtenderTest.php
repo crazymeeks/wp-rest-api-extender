@@ -12,8 +12,8 @@
 use Mock\Route\Author;
 use Crazymeeks\WP\Foundation\Route\WPRoute;
 use Crazymeeks\WP\Foundation\WPRestExtender\Extender;
-
-class WpRestExtenderTest extends WP_UnitTestCase {
+use PHPUnit\Framework\TestCase;
+class WpRestExtenderTest extends TestCase {
 
 	/**
 	 * @test

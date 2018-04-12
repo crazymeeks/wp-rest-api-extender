@@ -18,5 +18,25 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^7"
-    }
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "crazymeeks/wp-rest-api-extender",
+                "version": "v1.0.0",
+                "source": {
+                    "url": "git://github.com/crazymeeks/wp-rest-api-extender.git",
+                    "type": "git",
+                    "reference": "v1.0.0"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "Crazymeeks\\WP\\": "src/",
+                    }
+                }
+            }
+            
+        }
+    ]
 }
