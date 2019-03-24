@@ -69,14 +69,53 @@ class WPRoute
 	protected $whitelistedroutes = [];
 
 	/**
-	 * Constructor
-	 * 
+	 * The singleton instance of this class
+	 *
+	 * @var static
 	 */
-	public function __construct()
-	{
-		$this->prefixStack = new SplStack();
+	private static $instance;
 
-		$this->namespaceStack = new SplStack();
+	/**
+	 * Prevent this class from being instantiated (which would create a second instance of WPRoute)
+	 */
+	private function __construct()
+	{
+
+	}
+
+	/**
+	 * Prevent this class from being cloned (which would create a second instance of WPRoute)
+	 *
+	 * @return void
+	 */
+	private function __clone()
+	{
+
+	}
+
+	/**
+	 * Prevent this class from being unserialized (which would create a second instance of WPRoute)
+	 */
+	private function __wakeup()
+	{
+
+	}
+
+
+	/**
+	 * Get the instance. This is a singleton instance
+	 *
+	 * @return WPRotue
+	 */
+	public static function getInstance(): WPRoute
+	{
+		if (null === static::$instance) {
+			static::$instance = new static();
+			static::$instance->prefixStack = new SplStack();
+			static::$instance->namespaceStack = new SplStack();
+		}
+
+		return static::$instance;
 	}
 
 	/**

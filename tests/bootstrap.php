@@ -9,4 +9,4 @@
 define('WP_USE_THEMES', true);
 
 /** Loads the WordPress Environment and Template */
-require( '/var/www/web/tutorials/wp/wordpress/wp-config.php' );
+#require( '/var/www/web/tutorials/wp/wordpress/wp-config.php' );

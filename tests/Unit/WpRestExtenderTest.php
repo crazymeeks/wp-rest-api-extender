@@ -10,9 +10,10 @@
  */
 
 use Mock\Route\Author;
+use PHPUnit\Framework\TestCase;
 use Crazymeeks\WP\Foundation\Route\WPRoute;
 use Crazymeeks\WP\Foundation\WPRestExtender\Extender;
-use PHPUnit\Framework\TestCase;
+
 class WpRestExtenderTest extends TestCase {
 
 	/**
@@ -108,7 +109,9 @@ class WpRestExtenderTest extends TestCase {
 
 	private function getRoute()
 	{
-		return new WPRoute();
+		$route = WPRoute::getInstance();
+
+		return $route;
 	}
 }
 
