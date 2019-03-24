@@ -1,6 +1,10 @@
 {
     "name": "crazymeeks/wp-rest-api-extender",
     "description": "An extender plugin for WP Rest API",
+    "keywords": [
+        "WordPress REST API Router",
+        "WordPress Router"
+    ],
     "type": "wp-plugin",
     "license": "MIT",
     "authors": [
@@ -24,11 +28,11 @@
             "type": "package",
             "package": {
                 "name": "crazymeeks/wp-rest-api-extender",
-                "version": "v1.0.0",
+                "version": "v2.0.0",
                 "source": {
                     "url": "git://github.com/crazymeeks/wp-rest-api-extender.git",
                     "type": "git",
-                    "reference": "v1.0.0"
+                    "reference": "v2.0.0"
                 },
                 "autoload": {
                     "psr-4": {
