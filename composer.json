@@ -10,10 +10,11 @@
     "authors": [
         {
             "name": "Jeff Claud",
-            "email": "jefferson.claud@nuworks.ph"
+            "email": "jeffclaud17@gmail.com"
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Crazymeeks\\WP\\": "src/",
