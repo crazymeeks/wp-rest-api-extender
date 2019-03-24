@@ -13,8 +13,8 @@
 
 # A WordPress Plugin that extends WP Rest API
 
-### [Documentation]
-[v2.0.0](https://github.com/crazymeeks/wp-rest-api-extender/wiki/v2.0.0)  
+### Documentation
+[v2.0.0](https://github.com/crazymeeks/wp-rest-api-extender/wiki/v2.0.0) - new release
 [v1.0.0](https://github.com/crazymeeks/wp-rest-api-extender/wiki)
 ## Report Bug
 Email: jeffclaud17@gmail.com
